@@ -26,4 +26,15 @@ router.get('/category/:categoryId', async (req,res) => {
     }   
 })
 
+router.get('/:id', async (req,res) => {
+
+    try {
+        const product = await productsController.getProductById(req.params.id);
+        res.status(200).send(product);
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
 module.exports = router
