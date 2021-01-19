@@ -4,13 +4,14 @@ dotenv.config();
 
 const express = require("express");
 
-const categoriesRouters = require('./routers/categoriesRouters');
-
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const productsRouter = require('./routers/productsRouters');
+const categoriesRouters = require('./routers/categoriesRouters');
+
+app.use('/products', productsRouter)
 app.use("/categories", categoriesRouters);
 
 

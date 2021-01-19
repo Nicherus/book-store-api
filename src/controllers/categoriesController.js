@@ -1,14 +1,14 @@
 const Category = require("../models/Category");
 
 async function postCategory(name) {
-    await Category.create({name});
+    const category = await Category.create({name});
+    return  category;
 }
 
 async function getCategories() {
-    await Category.create({name});
 }
 
 module.exports = { 
     postCategory,
-    getCategories
+    getCategories    
 }
