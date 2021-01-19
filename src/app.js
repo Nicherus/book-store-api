@@ -8,9 +8,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/", (req, res) => {
-    res.send("deu bom");
-});
+const productsRouter = require('./routers/productsRouters');
+
+app.use('/products', productsRouter)
 
 
 module.exports = app;
