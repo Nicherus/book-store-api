@@ -15,12 +15,13 @@ router.post('/', async (req,res) => {
     }   
 })
 
-router.get('/:categoryId', async (req,res) => {
+router.get('/category/:categoryId', async (req,res) => {
 
     try {
-        const products = await productsController.getAllProductsByCategory(req.params.id);
+        const products = await productsController.getAllProductsByCategory(req.params.categoryId);
         res.status(200).send(products);
     } catch (err) {
+        console.log(err);
         res.sendStatus(500);
     }   
 })

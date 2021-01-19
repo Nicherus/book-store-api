@@ -5,8 +5,8 @@ const categoriesController = require("../controllers/categoriesController");
 
 router.post("/", async (req, res) => {
   try {
-    await categoriesController.postCategory(req.body.name);
-    res.sendStatus(200);
+    const category = await categoriesController.postCategory(req.body.name);
+    res.status(200).send(category);
   } catch (err) {
     return res.sendStatus(500);
   }
