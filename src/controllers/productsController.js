@@ -14,7 +14,14 @@ async function getAllProductsByCategory(categoryId) {
     return products;
 }
 
+async function getProductById(id) {
+
+    const product =  await Product.findAll( { where: { id } } );
+    return product;
+}
+
 module.exports = {
     postProduct,
-    getAllProductsByCategory
+    getAllProductsByCategory,
+    getProductById
 }
