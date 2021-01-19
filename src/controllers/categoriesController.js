@@ -6,6 +6,8 @@ async function postCategory(name) {
 }
 
 async function getCategories() {
+    const categories = await Category.findAll();
+    return categories;
 }
 
 module.exports = { 
