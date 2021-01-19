@@ -2,8 +2,9 @@ const Product = require("../models/Product");
 
 async function postProduct(productData) {
 
-    const {name, author, synopsis, amountStock, pages, year, price, categoryId} = productData;
+    //verificar se a categoria existe
 
+    const {name, author, synopsis, amountStock, pages, year, price, categoryId} = productData;
     const product =  await Product.create( {name, author, synopsis, amountStock, pages, year, price, categoryId} );
     return product;
 }
@@ -16,7 +17,8 @@ async function getAllProductsByCategory(categoryId) {
 
 async function getProductById(id) {
 
-    const product =  await Product.findAll( { where: { id } } );
+    const product =  await Product.findOne( { where: { id } } );
+    //se não existe => avisar
     return product;
 }
 
