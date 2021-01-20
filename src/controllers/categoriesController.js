@@ -10,7 +10,13 @@ async function getCategories() {
     return categories;
 }
 
+async function deleteCategory(id) {
+    const categoryToDestroy = await Category.findByPk(id);
+    await categoryToDestroy.destroy();
+}
+
 module.exports = { 
     postCategory,
-    getCategories    
+    getCategories,
+    deleteCategory    
 }
