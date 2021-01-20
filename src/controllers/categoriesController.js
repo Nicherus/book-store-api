@@ -2,8 +2,12 @@ const ForbiddenError = require("../errors/ForbiddenError");
 const Category = require("../models/Category");
 
 async function postCategory(name) {
+
+    const existsOtherCategoryWithThisName = await Category.findOne({ where: {name} });
+    if(existsOtherCategoryWithThisName) throw new ForbiddenError();
+
     const category = await Category.create({name});
-    return  category;
+    return category;
 }
 
 async function getCategories() {
@@ -12,8 +16,11 @@ async function getCategories() {
 }
 
 async function deleteCategory(id) {
+
+        //deletar tabela meio com esse Id
     const categoryToDestroy = await Category.findByPk(id);
     await categoryToDestroy.destroy();
+
 }
 
 async function updateCategory(id, name) {
