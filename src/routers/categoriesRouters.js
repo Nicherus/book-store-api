@@ -24,4 +24,17 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.delete("/:id", async (req, res) => {
+    const { id } = req.params;
+    if(!id) return res.sendStatus(422);
+
+    try {
+        await categoriesController.deleteCategory(id);
+        res.sendStatus(200);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+});
+
 module.exports = router;
