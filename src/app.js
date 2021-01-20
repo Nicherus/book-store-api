@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const cors = require("cors");
 dotenv.config();
+require('./utils/loadRelationships');
 
 const express = require("express");
 

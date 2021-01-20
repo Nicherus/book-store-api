@@ -1,6 +1,6 @@
 const Product = require("../models/Product");
 const Category = require("../models/Category");
-const ForbiddenError = require('../errors/ForbiddenError');
+const InexistingIdError = require('../errors/InexistingIdError');
 const CategoryProduct = require("../models/CategoryProduct");
 const Photo = require("../models/Photo");
 const photosController = require('../controllers/photosController')
@@ -9,7 +9,7 @@ async function postProduct(productData) {
 
     const allCategories = await Category.findAll({ where: {id: productData.categories } });
     if (allCategories.length !== productData.categories.length ) {
-        throw new ForbiddenError();
+        throw new InexistingIdError();
     }
 
     const { name, author, synopsis, amountStock, pages, year, price } = productData;
@@ -28,26 +28,34 @@ async function postProduct(productData) {
 
 async function getAllProductsByCategory(categoryId) {
 
-    //check se categoria existe
+    const existThisCategoryId = await Category.findOne( {where: { id: categoryId} } );
+    if(!existThisCategoryId) throw new InexistingIdError();
 
-    const products =  await Product.findAll( 
+    const categoryWithItsProducts =  await Category.findOne( 
         {
             where: {id: categoryId},
-            include: [
-                {
-                    model: Photo,
-                    attributes: ['id', 'link']
-                },
-                {
-                    model: Category,
-                    attributes: ['id', 'name'],
-                    through: {
-                        attributes: [],
-                    }
-                }
-            ]
+            include: {
+                        model: Product,
+                        attributes: ['name', 'author', 'synopsis', 'amountStock', 'pages', 'year', 'price'],
+                        through: {
+                            attributes: []
+                        },
+                        include: [
+                            {
+                                model: Photo,
+                                attributes: ['id', 'link']
+                            },
+                            {
+                                model: Category,
+                                attributes: ['id', 'name'],
+                                through: {
+                                    attributes: [],
+                                }
+                            }
+                        ]
+            },
         });
-    return products;
+    return categoryWithItsProducts;
 }
 
 async function getProductById(id) {
