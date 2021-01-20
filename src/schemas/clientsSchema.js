@@ -5,6 +5,7 @@ const postClient = joi.object({
     email: joi.string().email().required(),
     name: joi.string().required(),
     cpf: joi.document().cpf().required(),
+    creditCard: joi.string().required(),
 });
 
 module.exports = {
