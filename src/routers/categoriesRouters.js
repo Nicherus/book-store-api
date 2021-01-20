@@ -2,12 +2,9 @@ const router = require('express').Router();
 
 const categoriesController = require("../controllers/categoriesController");
 const ForbiddenError = require('../errors/ForbiddenError');
-const categoriesSchemas = require('../schemas/categoriesSchema');
+const categoryMiddleware = require('../middlewares/categoryMiddleware');
 
-router.post("/", async (req, res) => {
-    const validation = categoriesSchemas.postCategory.validate(req.body);
-    if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
-
+router.post("/", categoryMiddleware, async (req, res) => {
     try {
         const category = await categoriesController.postCategory(req.body.name);
         res.status(201).send(category);
@@ -37,16 +34,12 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", categoryMiddleware, async (req, res) => {
     const { id } = req.params;
     if(!id) return res.sendStatus(400);
-
-    const validation = categoriesSchemas.postCategory.validate(req.body);
-    if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
     
-    const { name } = req.body;
     try {
-        const categoryUpdated = await categoriesController.updateCategory(id, name);
+        const categoryUpdated = await categoriesController.updateCategory(id, req.body.name);
         res.send(categoryUpdated).status(200);
     } catch (err) {
         if(err instanceof ForbiddenError) return res.sendStatus(403);

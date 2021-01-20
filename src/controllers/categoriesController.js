@@ -1,11 +1,8 @@
 const ForbiddenError = require("../errors/ForbiddenError");
 const Category = require("../models/Category");
+const CategoryProduct = require("../models/CategoryProduct");
 
 async function postCategory(name) {
-
-    const existsOtherCategoryWithThisName = await Category.findOne({ where: {name} });
-    if(existsOtherCategoryWithThisName) throw new ForbiddenError();
-
     const category = await Category.create({name});
     return category;
 }
@@ -16,17 +13,13 @@ async function getCategories() {
 }
 
 async function deleteCategory(id) {
-
-        //deletar tabela meio com esse Id
+    await CategoryProduct.destroy({ where: {categoryId: id}});
     const categoryToDestroy = await Category.findByPk(id);
     await categoryToDestroy.destroy();
 
 }
 
 async function updateCategory(id, name) {
-    const existsOtherCategoryWithThisName = await Category.findOne({ where: {name} });
-    if(existsOtherCategoryWithThisName) throw new ForbiddenError();
-
     const category = await Category.findByPk(id);
     category.name = name;  
     await category.save();
@@ -34,9 +27,15 @@ async function updateCategory(id, name) {
     return category;
 }
 
+async function validateExistsCategoryName(name) {
+    const existsOtherCategoryWithThisName = await Category.findOne({ where: {name} });
+    if(existsOtherCategoryWithThisName) throw new ForbiddenError();
+}
+
 module.exports = { 
     postCategory,
     getCategories,
     deleteCategory,
-    updateCategory    
+    updateCategory,
+    validateExistsCategoryName    
 }

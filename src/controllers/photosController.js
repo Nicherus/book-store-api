@@ -2,7 +2,6 @@ const { func } = require("joi");
 const Photo = require("../models/Photo");
 
 async function getPhotosByProduct(productId) {
-    // considerando que o id foi tratado antes
     const photos =  await Photo.findAll( {where: {productId}} );
     return photos;
 }
