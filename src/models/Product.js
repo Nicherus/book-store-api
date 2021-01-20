@@ -47,6 +47,5 @@ Product.init(
 );
 
 Product.hasMany( Photo ); 
-Product.belongsToMany( Category , { through: CategoryProduct }); 
 
 module.exports = Product;
