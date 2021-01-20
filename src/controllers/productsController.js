@@ -2,8 +2,10 @@ const Product = require("../models/Product");
 const Category = require("../models/Category");
 const InexistingIdError = require('../errors/InexistingIdError');
 const CategoryProduct = require("../models/CategoryProduct");
+const ProductOrder = require("../models/ProductOrder");
 const Photo = require("../models/Photo");
-const photosController = require('../controllers/photosController')
+const photosController = require('../controllers/photosController');
+const { func } = require("joi");
 
 async function postProduct(productData) {
 
@@ -82,8 +84,20 @@ async function getProductById(id) {
     return product;
 }
 
+async function deleteProduct(id) {
+
+    const product = await Product.findOne( { where: {id} } );
+    if(!product) throw new InexistingIdError();
+
+    await Photo.destroy( { where: { productId:id} } );
+    await CategoryProduct.destroy( { where: { productId:id} } );
+    await ProductOrder.destroy( { where: { productId:id} } );
+    await Product.destroy( {where: {id} });
+}
+
 module.exports = {
     postProduct,
     getAllProductsByCategory,
-    getProductById
+    getProductById,
+    deleteProduct
 }

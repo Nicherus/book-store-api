@@ -3,6 +3,7 @@ const sequelize = require("../utils/database");
 const Category = require("./Category");
 const CategoryProduct = require("./CategoryProduct");
 const Photo = require("./Photo");
+const ProductOrder = require("./ProductOrder");
 
 class Product extends Sequelize.Model {}
 
@@ -47,5 +48,6 @@ Product.init(
 );
 
 Product.hasMany( Photo ); 
+Product.hasMany( ProductOrder ); 
 
 module.exports = Product;

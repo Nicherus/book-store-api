@@ -26,7 +26,7 @@ ProductOrder.init(
           },
     },
 
-    { sequelize, modelName: "productOrder" }
+    { sequelize, modelName: "productOrder", tableName: "productOrder" }
 );
 
 module.exports = ProductOrder;

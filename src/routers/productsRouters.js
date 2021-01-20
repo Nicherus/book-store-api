@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const productsController = require('../controllers/productsController');
-const ForbiddenError = require('../errors/ForbiddenError');
+const InexistingIdError = require('../errors/InexistingIdError');
 const productsSchemas = require('../schemas/productsSchema');
 
 router.post('/', async (req,res) => {
@@ -14,7 +14,7 @@ router.post('/', async (req,res) => {
         res.status(201).send(product);
     } catch (err) {
         console.log(err);
-        if (err instanceof ForbiddenError) {
+        if (err instanceof InexistingIdError) {
             return res.status(400).send({error: 'Some category Id does not exist'})
         }
         res.sendStatus(500);
@@ -37,6 +37,20 @@ router.get('/:id', async (req,res) => {
     try {
         const product = await productsController.getProductById(req.params.id);
         res.status(200).send(product);
+    } catch (err) {
+        if(err instanceof InexistingIdError) {
+            return res.status(400).send({error: "This Id does not belong to any product"});
+        }
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
+router.delete('/:id', async (req,res) => {
+
+    try {
+        await productsController.deleteProduct(req.params.id);
+        res.status(200).send('Product deleted with success');
     } catch (err) {
         if(err instanceof InexistingIdError) {
             return res.status(400).send({error: "This Id does not belong to any product"});
