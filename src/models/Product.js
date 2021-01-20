@@ -2,6 +2,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = require("../utils/database");
 const Category = require("./Category");
 const CategoryProduct = require("./CategoryProduct");
+const Photo = require("./Photo");
 
 class Product extends Sequelize.Model {}
 
@@ -45,6 +46,7 @@ Product.init(
     { sequelize, modelName: "product" }
 );
 
+Product.hasMany( Photo ); 
 Product.belongsToMany( Category , { through: CategoryProduct }); 
 
 module.exports = Product;

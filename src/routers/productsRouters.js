@@ -34,12 +34,13 @@ router.get('/category/:categoryId', async (req,res) => {
 
 router.get('/:id', async (req,res) => {
 
-    //se Id existe senao 400
-
     try {
         const product = await productsController.getProductById(req.params.id);
         res.status(200).send(product);
     } catch (err) {
+        if(err instanceof InexistingIdError) {
+            return res.status(400).send({error: "This Id does not belong to any product"});
+        }
         console.log(err);
         res.sendStatus(500);
     }   

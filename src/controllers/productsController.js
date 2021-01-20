@@ -22,30 +22,55 @@ async function postProduct(productData) {
     
     await photosController.postPhotos(productData.photos, product.id)
 
-    //buscar Product
-
-    return product;
+    const productAllData = await getProductById(product.id);
+    return productAllData;
 }
 
 async function getAllProductsByCategory(categoryId) {
 
+    //check se categoria existe
+
     const products =  await Product.findAll( 
         {
-            where: {categoryId},
-            include: {
-                model: 'Photo',
-            }
+            where: {id: categoryId},
+            include: [
+                {
+                    model: Photo,
+                    attributes: ['id', 'link']
+                },
+                {
+                    model: Category,
+                    attributes: ['id', 'name'],
+                    through: {
+                        attributes: [],
+                    }
+                }
+            ]
         });
     return products;
-
-    //include Photos
 }
 
 async function getProductById(id) {
 
-    const product =  await Product.findOne( { where: { id } } );
-    //se não existe => avisar
-    //include Photos e categories
+    const product =  await Product.findOne({
+        where: { id },
+        include: [
+            {
+                model: Photo,
+                attributes: ['id', 'link']
+            },
+            {
+                model: Category,
+                attributes: ['id', 'name'],
+                through: {
+                    attributes: [],
+                }
+            }
+        ]
+    });
+    if (!product) {
+        throw new InexistingIdError();
+    }
     return product;
 }
 
