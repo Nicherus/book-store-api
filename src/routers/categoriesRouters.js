@@ -1,6 +1,7 @@
 const router = require('express').Router();
 
 const categoriesController = require("../controllers/categoriesController");
+const ForbiddenError = require('../errors/ForbiddenError');
 const categoriesSchemas = require('../schemas/categoriesSchema');
 
 router.post("/", async (req, res) => {
@@ -32,7 +33,23 @@ router.delete("/:id", async (req, res) => {
         await categoriesController.deleteCategory(id);
         res.sendStatus(200);
     } catch (err) {
-        console.log(err);
+        return res.sendStatus(500);
+    }
+});
+
+router.put("/:id", async (req, res) => {
+    const { id } = req.params;
+    if(!id) return res.sendStatus(422);
+
+    const validation = categoriesSchemas.postCategory.validate(req.body);
+    if(validation.error) return res.status(422).send({error: 'Data in wrong format'});
+    
+    const { name } = req.body;
+    try {
+        const categoryUpdated = await categoriesController.updateCategory(id, name);
+        res.send(categoryUpdated).status(200);
+    } catch (err) {
+        if(err instanceof ForbiddenError) res.sendStatus(403);
         return res.sendStatus(500);
     }
 });
