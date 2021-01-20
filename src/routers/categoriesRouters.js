@@ -49,7 +49,7 @@ router.put("/:id", async (req, res) => {
         const categoryUpdated = await categoriesController.updateCategory(id, name);
         res.send(categoryUpdated).status(200);
     } catch (err) {
-        if(err instanceof ForbiddenError) res.sendStatus(403);
+        if(err instanceof ForbiddenError) return res.sendStatus(403);
         return res.sendStatus(500);
     }
 });

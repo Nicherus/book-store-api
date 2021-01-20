@@ -17,13 +17,13 @@ async function deleteCategory(id) {
 }
 
 async function updateCategory(id, name) {
+    const existsOtherCategoryWithThisName = await Category.findOne({ where: {name} });
+    if(existsOtherCategoryWithThisName) throw new ForbiddenError();
+
     const category = await Category.findByPk(id);
-    category.name = name;
-    
+    category.name = name;  
     await category.save();
-    //tratar erro em caso de nome existente
-    
-    if(!category) throw new ForbiddenError();
+
     return category;
 }
 
