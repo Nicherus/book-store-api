@@ -8,7 +8,8 @@ const postProductSchema = joi.object({
     pages: joi.number().integer().required(),
     year: joi.number().integer().required(),
     price: joi.number().integer().required(),
-    categoryId: joi.number().integer().required(),
+    photos: joi.array().items(joi.string()).min(1).required(),
+    categories: joi.array().items(joi.number().integer()).min(1).required(),
 })
 
 module.exports = {

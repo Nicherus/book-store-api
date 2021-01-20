@@ -1,5 +1,7 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../utils/database");
+const Category = require("./Category");
+const CategoryProduct = require("./CategoryProduct");
 
 class Product extends Sequelize.Model {}
 
@@ -35,10 +37,6 @@ Product.init(
       type: Sequelize.INTEGER,
       allowNull: false,
     },
-    categoryId: {
-      type: Sequelize.INTEGER,
-      allowNull: false
-    },
     amountStock: {
       type: Sequelize.INTEGER,
       defaultValue: 0
@@ -46,5 +44,7 @@ Product.init(
     
     { sequelize, modelName: "product" }
 );
+
+Product.belongsToMany( Category , { through: CategoryProduct }); 
 
 module.exports = Product;

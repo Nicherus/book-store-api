@@ -6,11 +6,11 @@ const categoriesSchemas = require('../schemas/categoriesSchema');
 
 router.post("/", async (req, res) => {
     const validation = categoriesSchemas.postCategory.validate(req.body);
-    if(validation.error) return res.status(422).send({error: 'Data in wrong format'});
+    if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
 
     try {
         const category = await categoriesController.postCategory(req.body.name);
-        res.status(200).send(category);
+        res.status(201).send(category);
     } catch (err) {
         return res.sendStatus(500);
     }
@@ -27,7 +27,7 @@ router.get("/", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
-    if(!id) return res.sendStatus(422);
+    if(!id) return res.sendStatus(400);
 
     try {
         await categoriesController.deleteCategory(id);
@@ -39,10 +39,10 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     const { id } = req.params;
-    if(!id) return res.sendStatus(422);
+    if(!id) return res.sendStatus(400);
 
     const validation = categoriesSchemas.postCategory.validate(req.body);
-    if(validation.error) return res.status(422).send({error: 'Data in wrong format'});
+    if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
     
     const { name } = req.body;
     try {
