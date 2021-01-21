@@ -63,7 +63,7 @@ async function getAllProductsByCategory(categoryId) {
             where: {id: categoryId},
             include: {
                         model: Product,
-                        attributes: ['name', 'author', 'synopsis', 'amountStock', 'pages', 'year', 'price'],
+                        attributes: ['id','name', 'author', 'synopsis', 'amountStock', 'pages', 'year', 'price'],
                         through: {
                             attributes: []
                         },
