@@ -5,6 +5,7 @@ const CategoryProduct = require("../models/CategoryProduct");
 const ProductOrder = require("../models/ProductOrder");
 const Photo = require("../models/Photo");
 const photosController = require('../controllers/photosController');
+const { function } = require("joi");
 
 async function postProduct(productData) {
 
@@ -25,6 +26,11 @@ async function postProduct(productData) {
 
     const productAllData = await getProductById(product.id);
     return productAllData;
+}
+
+async function getAllProducts() {
+    const products = await Product.findAll();
+    return products;
 }
 
 async function getAllProductsByCategory(categoryId) {
@@ -99,6 +105,7 @@ async function deleteProduct(id) {
 
 module.exports = {
     postProduct,
+    getAllProducts,
     getAllProductsByCategory,
     getProductById,
     deleteProduct
