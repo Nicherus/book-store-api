@@ -12,6 +12,19 @@ const postProductSchema = joi.object({
     categories: joi.array().items(joi.number().integer()).min(1).required(),
 })
 
+const putProductSchema = joi.object({
+    name: joi.string(),
+    author: joi.string(),
+    synopsis: joi.string(),
+    amountStock: joi.number().integer(),
+    pages: joi.number().integer(),
+    year: joi.number().integer(),
+    price: joi.number().integer(),
+    photos: joi.array().items(joi.string()).min(1),
+    categories: joi.array().items(joi.number().integer()).min(1),
+})
+
 module.exports = {
     postProductSchema,
+    putProductSchema
 }
