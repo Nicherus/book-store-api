@@ -97,6 +97,9 @@ async function deleteProduct(id) {
     await Product.destroy( {where: {id} });
 }
 
+<<<<<<< HEAD
+//updateProducts
+=======
 async function updateProduct(productData, id) {
 
     const product =  await _checkIfProductIdExists(id);
@@ -149,6 +152,7 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
     });
     await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
 }
+>>>>>>> main
 
 
 module.exports = {

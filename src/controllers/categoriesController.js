@@ -1,3 +1,4 @@
+const InexistingIdError = require("../errors/InexistingIdError");
 const ForbiddenError = require("../errors/ForbiddenError");
 const Category = require("../models/Category");
 const CategoryProduct = require("../models/CategoryProduct");
@@ -12,6 +13,11 @@ async function getCategories() {
     return categories;
 }
 
+async function getCategoriesById(id) {
+    const category = await Category.findOne({ where: {id} });
+    return category;
+}
+
 async function deleteCategory(id) {
     await CategoryProduct.destroy({ where: {categoryId: id}});
     const categoryToDestroy = await Category.findByPk(id);
@@ -23,7 +29,6 @@ async function updateCategory(id, name) {
     const category = await Category.findByPk(id);
     category.name = name;  
     await category.save();
-
     return category;
 }
 
@@ -37,5 +42,6 @@ module.exports = {
     getCategories,
     deleteCategory,
     updateCategory,
-    validateExistsCategoryName    
+    getCategoriesById,
+    validateExistsCategoryName, 
 }

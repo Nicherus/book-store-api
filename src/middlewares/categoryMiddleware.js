@@ -1,11 +1,13 @@
 const categoriesSchemas = require("../schemas/categoriesSchema");
-const { validateExistsCategoryName } = require("../controllers/categoriesController");
+const { validateExistsCategoryName, validateExistsCategoryNameUpdate } = require("../controllers/categoriesController");
 const ForbiddenError = require("../errors/ForbiddenError");
+const InexistingIdError = require("../errors/InexistingIdError");
 
 async function categoryMiddleware(req, res, next) { 
-    const validation = categoriesSchemas.postCategory.validate(req.body);
+    const toValidate = {name: req.body.name}
+    const validation = categoriesSchemas.postCategory.validate(toValidate);
     if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
-
+    console.log(`zap`)
     try {
         await validateExistsCategoryName(req.body.name);
         next();
@@ -16,4 +18,15 @@ async function categoryMiddleware(req, res, next) {
     }
 }
 
-module.exports = categoryMiddleware;
+async function categoryUpdateMiddleware(req, res, next) { 
+    const toValidate = {name: req.body.name}
+    const validation = categoriesSchemas.postCategory.validate(toValidate);
+    if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
+    
+    next();
+
+}
+
+module.exports = {
+    categoryMiddleware, categoryUpdateMiddleware
+};
