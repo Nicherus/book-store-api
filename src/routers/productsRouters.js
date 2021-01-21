@@ -60,4 +60,32 @@ router.delete('/:id', async (req,res) => {
     }   
 })
 
+router.get('/', async (req,res) => {
+
+    try {
+        const products = await productsController.getAllProducts(req.params.id);
+        res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
+router.put('/:id', async (req,res) => {
+    
+    const validation = productsSchemas.putProductSchema.validate(req.body);
+    if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
+
+    try {
+        const updatedProduct = await productsController.updateProduct(req.body, req.params.id);
+        res.status(201).send(updatedProduct);
+    } catch (err) {
+        console.log(err);
+        if (err instanceof InexistingIdError) {
+            return res.status(400).send({error: 'Some category Id or Product does not exist'})
+        }
+        res.sendStatus(500);
+    }   
+})
+
 module.exports = router
