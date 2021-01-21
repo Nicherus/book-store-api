@@ -1,16 +1,13 @@
 const router = require('express').Router();
 
 const categoriesController = require("../controllers/categoriesController");
-const ForbiddenError = require('../errors/ForbiddenError');
-const categoriesSchemas = require('../schemas/categoriesSchema');
+const InexistingIdError = require('../errors/InexistingIdError');
+const categoryMiddleware = require('../middlewares/categoryMiddleware');
 
-router.post("/", async (req, res) => {
-    const validation = categoriesSchemas.postCategory.validate(req.body);
-    if(validation.error) return res.status(422).send({error: 'Data in wrong format'});
-
+router.post("/", categoryMiddleware.categoryMiddleware, async (req, res) => {
     try {
         const category = await categoriesController.postCategory(req.body.name);
-        res.status(200).send(category);
+        res.status(201).send(category);
     } catch (err) {
         return res.sendStatus(500);
     }
@@ -29,31 +26,41 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     const { id } = req.params;
-    if(!id) return res.sendStatus(422);
-
     try {
-        await categoriesController.deleteCategory(id);
-        res.sendStatus(200);
+        const category = await categoriesController.getCategoriesById(id);
+        res
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', 1)
+        .send(category)
+        .status(200);
     } catch (err) {
         return res.sendStatus(500);
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
     const { id } = req.params;
-    if(!id) return res.sendStatus(422);
+    if(!id) return res.sendStatus(400);
 
-    const validation = categoriesSchemas.postCategory.validate(req.body);
-    if(validation.error) return res.status(422).send({error: 'Data in wrong format'});
-    
-    const { name } = req.body;
     try {
-        const categoryUpdated = await categoriesController.updateCategory(id, name);
+        await categoriesController.deleteCategory(id);
+        res.status(200).send({});
+    } catch (err) {
+        return res.sendStatus(500);
+    }
+});
+
+router.put("/:id", categoryMiddleware.categoryUpdateMiddleware, async (req, res) => {
+    const { id } = req.params;
+    if(!id) return res.sendStatus(400);
+    
+    try {
+        const categoryUpdated = await categoriesController.updateCategory(id, req.body.name);
         res.send(categoryUpdated).status(200);
     } catch (err) {
-        if(err instanceof ForbiddenError) return res.sendStatus(403);
+        if(err instanceof InexistingIdError) return res.sendStatus(404);
         return res.sendStatus(500);
     }
 });

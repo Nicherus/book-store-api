@@ -1,32 +1,26 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../utils/database");
 
-class ProductOrder extends Sequelize.Model {}
+class CategoryProduct extends Sequelize.Model {}
 
-ProductOrder.init(
+CategoryProduct.init(
     {
         id: {
             type: Sequelize.INTEGER,
             autoIncrement: true,
             allowNull: false,
             primaryKey: true
-          },
-          amount: {
+        },
+            productId: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            defaultValue: 1,
-          },
-          orderId: {
+        },
+            categoryId: {
             type: Sequelize.INTEGER,
             allowNull: false,
-          },
-          productId: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-          },
+        },
     },
-
-    { sequelize, modelName: "productOrder", tableName: "productOrder" }
+    { sequelize, modelName: "categoryProduct", tableName: 'categoryProduct' }
 );
 
-module.exports = ProductOrder;
+module.exports = CategoryProduct;

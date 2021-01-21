@@ -19,9 +19,8 @@ router.post("/", async (req, res) => {
     const validationAddress = addressesSchemas.postAddress.validate(addressData);
     if(validationAddress.error) return res.status(422).send({error: validationAddress.error.details[0].message});
 
-    //implementar logica de cartao de credito
 
-    const clientData = { name: req.body.name, cpf: req.body.cpf, email: req.body.email }
+    const clientData = { name: req.body.name, cpf: req.body.cpf, email: req.body.email, creditCard: req.body.creditCard }
     const validationClient = clientsSchemas.postClient.validate(clientData);
     if( validationClient.error) return res.status(422).send({error: validationClient.error.details[0].message});
     
