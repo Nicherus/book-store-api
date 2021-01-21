@@ -94,6 +94,9 @@ async function deleteProduct(id) {
     await Product.destroy( {where: {id} });
 }
 
+//getAllProducts
+//updateProducts
+
 module.exports = {
     postProduct,
     getAllProductsByCategory,
