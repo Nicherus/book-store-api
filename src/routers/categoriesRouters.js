@@ -19,7 +19,11 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const categories = await categoriesController.getCategories();
-        res.send(categories).status(200);
+        res
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', categories.length)
+        .send(categories)
+        .status(200);
     } catch (err) {
         return res.sendStatus(500);
     }
