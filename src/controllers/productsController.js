@@ -5,7 +5,6 @@ const CategoryProduct = require("../models/CategoryProduct");
 const ProductOrder = require("../models/ProductOrder");
 const Photo = require("../models/Photo");
 const photosController = require('../controllers/photosController');
-const { function } = require("joi");
 
 async function postProduct(productData) {
 
