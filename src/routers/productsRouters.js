@@ -60,4 +60,15 @@ router.delete('/:id', async (req,res) => {
     }   
 })
 
+router.get('/', async (req,res) => {
+
+    try {
+        const products = await productsController.getAllProducts(req.params.id);
+        res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
 module.exports = router

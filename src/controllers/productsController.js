@@ -27,6 +27,11 @@ async function postProduct(productData) {
     return productAllData;
 }
 
+async function getAllProducts() {
+    const products = await Product.findAll();
+    return products;
+}
+
 async function getAllProductsByCategory(categoryId) {
 
     const existThisCategoryId = await Category.findOne( {where: { id: categoryId} } );
@@ -99,6 +104,7 @@ async function deleteProduct(id) {
 
 module.exports = {
     postProduct,
+    getAllProducts,
     getAllProductsByCategory,
     getProductById,
     deleteProduct
