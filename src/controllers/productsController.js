@@ -97,14 +97,10 @@ async function deleteProduct(id) {
     await Product.destroy( {where: {id} });
 }
 
-<<<<<<< HEAD
-//updateProducts
-=======
 async function updateProduct(productData, id) {
 
     const product =  await _checkIfProductIdExists(id);
 
-    //atualizar categorias caso tenha => refactor
     if (productData.categories) {
         await _checkIfExistsAllCategories(productData.categories);
         await CategoryProduct.destroy( { where: { "productId": id} } );
@@ -152,7 +148,6 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
     });
     await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
 }
->>>>>>> main
 
 
 module.exports = {
