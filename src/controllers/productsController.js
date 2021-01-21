@@ -150,8 +150,11 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
 }
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
 
 >>>>>>> 5c283448aed63d048e53a318df4c0d3d182c8a0c
+>>>>>>> main
 
 module.exports = {
     postProduct,
