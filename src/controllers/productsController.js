@@ -8,18 +8,12 @@ const photosController = require('../controllers/photosController');
 
 async function postProduct(productData) {
 
-    const allCategories = await Category.findAll({ where: {id: productData.categories } });
-    if (allCategories.length !== productData.categories.length ) {
-        throw new InexistingIdError();
-    }
+    await _checkIfExistsAllCategories(productData.categories);
 
     const { name, author, synopsis, amountStock, pages, year, price } = productData;
     const product =  await Product.create( {name, author, synopsis, amountStock, pages, year, price} );
   
-    const arrayInsertMiddleTableCategory = productData.categories.map( c => { 
-        return {"productId": product.id, "categoryId": c }
-    });
-    await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
+    await _addCategoriesProductsInMiddleTable(productData.categories, product.id);
     
     await photosController.postPhotos(productData.photos, product.id)
 
@@ -90,8 +84,7 @@ async function getProductById(id) {
 
 async function deleteProduct(id) {
 
-    const product = await Product.findOne( { where: {id} } );
-    if(!product) throw new InexistingIdError();
+    await _checkIfProductIdExists(id);
 
     await Photo.destroy( { where: { productId:id} } );
     await CategoryProduct.destroy( { where: { productId:id} } );
@@ -99,12 +92,68 @@ async function deleteProduct(id) {
     await Product.destroy( {where: {id} });
 }
 
+<<<<<<< HEAD
 //updateProducts
+=======
+async function updateProduct(productData, id) {
+
+    const product =  await _checkIfProductIdExists(id);
+
+    //atualizar categorias caso tenha => refactor
+    if (productData.categories) {
+        await _checkIfExistsAllCategories(productData.categories);
+        await CategoryProduct.destroy( { where: { "productId": id} } );
+        await _addCategoriesProductsInMiddleTable(productData.categories, id);
+    }
+
+    if (productData.photos) {
+        await Photo.destroy( { where: { "productId": id} } );
+        await photosController.postPhotos(productData.photos, id);
+    }
+
+    const { name, author, synopsis, amountStock, pages, year, price } = productData;
+    
+    product.name = name || product.name;
+    product.author = author || product.author;
+    product.synopsis = synopsis || product.synopsis;
+    product.amountStock = amountStock || product.amountStock;
+    product.pages = pages || product.pages;
+    product.year = year || product.year;
+    product.price = price || product.price;
+    await product.save();
+
+    const updatedProductAllData = await getProductById(product.id);
+    return updatedProductAllData;
+}
+
+async function _checkIfExistsAllCategories(categories) {
+
+    const allCategories = await Category.findAll({ where: {id: categories } });
+        if (allCategories.length !== categories.length ) {
+            throw new InexistingIdError();
+        }
+}
+
+async function _checkIfProductIdExists(id) {
+
+    const product = await Product.findOne( { where: {id} } );
+    if(!product) throw new InexistingIdError();
+    return product;
+}
+
+async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
+    const arrayInsertMiddleTableCategory = categoriesIds.map( c => { 
+        return {"productId": productId, "categoryId": c }
+    });
+    await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
+}
+>>>>>>> main
 
 module.exports = {
     postProduct,
     getAllProducts,
     getAllProductsByCategory,
     getProductById,
-    deleteProduct
+    deleteProduct,
+    updateProduct
 }
