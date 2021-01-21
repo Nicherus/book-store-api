@@ -26,6 +26,11 @@ async function getAllProducts() {
     return products;
 }
 
+async function getTopSellingProducts() {
+    const products = await Product.findAll();
+    return products;
+}
+
 async function getAllProductsByCategory(categoryId) {
 
     const existThisCategoryId = await Category.findOne( {where: { id: categoryId} } );
@@ -96,7 +101,6 @@ async function updateProduct(productData, id) {
 
     const product =  await _checkIfProductIdExists(id);
 
-    //atualizar categorias caso tenha => refactor
     if (productData.categories) {
         await _checkIfExistsAllCategories(productData.categories);
         await CategoryProduct.destroy( { where: { "productId": id} } );
@@ -144,6 +148,13 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
     });
     await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
 }
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5c283448aed63d048e53a318df4c0d3d182c8a0c
+>>>>>>> main
 
 module.exports = {
     postProduct,
@@ -151,5 +162,6 @@ module.exports = {
     getAllProductsByCategory,
     getProductById,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getTopSellingProducts
 }
