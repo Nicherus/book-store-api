@@ -71,6 +71,17 @@ router.get('/', async (req,res) => {
     }   
 })
 
+router.get('/top-selling', async (req,res) => {
+
+    try {
+        const products = await productsController.getTopSellingProducts();
+        res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
 router.put('/:id', async (req,res) => {
     
     const validation = productsSchemas.putProductSchema.validate(req.body);
@@ -78,7 +89,7 @@ router.put('/:id', async (req,res) => {
 
     try {
         const updatedProduct = await productsController.updateProduct(req.body, req.params.id);
-        res.status(201).send(updatedProduct);
+        res.status(200).send(updatedProduct);
     } catch (err) {
         console.log(err);
         if (err instanceof InexistingIdError) {

@@ -26,6 +26,11 @@ async function getAllProducts() {
     return products;
 }
 
+async function getTopSellingProducts() {
+    const products = await Product.findAll();
+    return products;
+}
+
 async function getAllProductsByCategory(categoryId) {
 
     const existThisCategoryId = await Category.findOne( {where: { id: categoryId} } );
@@ -145,11 +150,13 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
     await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
 }
 
+
 module.exports = {
     postProduct,
     getAllProducts,
     getAllProductsByCategory,
     getProductById,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getTopSellingProducts
 }
