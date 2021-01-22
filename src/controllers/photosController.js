@@ -6,6 +6,12 @@ async function getAllPhotos() {
     return photos;
 }
 
+async function getPhotoById(id) {
+    const photo = await Photo.findOne( { where: {id} } );
+    if(!photo) throw new InexistingIdError();
+    return photo;
+}
+
 async function getPhotosByProduct(productId) {
     const photos =  await Photo.findAll( {where: {productId}} );
     return photos;
@@ -36,5 +42,6 @@ module.exports = {
     getPhotosByProduct,
     postPhotos,
     deletePhoto,
-    getAllPhotos
+    getAllPhotos,
+    getPhotoById,
 }

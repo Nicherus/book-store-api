@@ -51,7 +51,29 @@ router.get('/admin/:id', async (req,res) => {
 
     try {
         const product = await productsController.getProductForAdminById(req.params.id);
-        res.status(200).send(product);
+        res
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', 1)
+        .send(product)
+        .status(200);
+    } catch (err) {
+        if(err instanceof InexistingIdError) {
+            return res.status(400).send({error: "This Id does not belong to any product"});
+        }
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
+router.get('/admin', async (req,res) => {
+
+    try {
+        const products = await productsController.getProductsAdmin();
+        res
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', products.length)
+        .send(products)
+        .status(200);
     } catch (err) {
         if(err instanceof InexistingIdError) {
             return res.status(400).send({error: "This Id does not belong to any product"});
@@ -75,11 +97,11 @@ router.get('/:id', async (req,res) => {
     }   
 })
 
-router.delete('/:id', async (req,res) => {
+router.delete('/admin/:id', async (req,res) => {
 
     try {
         await productsController.deleteProduct(req.params.id);
-        res.status(200).send('Product deleted with success');
+        res.status(200).send({});
     } catch (err) {
         if(err instanceof InexistingIdError) {
             return res.status(400).send({error: "This Id does not belong to any product"});

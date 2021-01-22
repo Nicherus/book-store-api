@@ -154,10 +154,50 @@ async function getProductForAdminById(id) {
         "synopsis": product.synopsis,
         "pages": product.pages,
         "amountStock": product.amountStock,
-        "photos": arrayIdPhotos, 
+        "photosIds": arrayIdPhotos, 
         "categories": arrayIdCtegories 
     };
     return productFormated;
+}
+
+
+async function getProductsAdmin() {
+
+    const products =  await Product.findAll({
+        include: [
+            {
+                model: Photo,
+                attributes: ['id']
+            },
+            {
+                model: Category,
+                attributes: ['id'],
+                through: {
+                    attributes: [],
+                }
+            }
+        ]
+    });
+
+    const productsFormatted = products.map((element) => {
+        const arrayIdPhotos = element.photos.map(photo => photo.id);
+        const arrayIdCategories = element.categories.map(c => c.id);
+        const productFormated = {
+            "id": element.id,
+            "name": element.name,
+            "price": element.price,
+            "author": element.author,
+            "year": element.year,
+            "synopsis": element.synopsis,
+            "pages": element.pages,
+            "amountStock": element.amountStock,
+            "photosIds": arrayIdPhotos, 
+            "categories": arrayIdCategories 
+        };
+        return productFormated;
+    })
+
+    return productsFormatted;
 }
 
 async function deleteProduct(id) {
@@ -233,6 +273,7 @@ async function decrementProductStock(productId, decrement) {
 module.exports = {
     postProduct,
     getAllProducts,
+    getProductsAdmin,
     getAllProductsByCategory,
     getProductById,
     deleteProduct,
