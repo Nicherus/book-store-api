@@ -13,12 +13,14 @@ const productsRouter = require('./routers/productsRouters');
 const categoriesRouters = require('./routers/categoriesRouters');
 const clientsRouters = require('./routers/clientsRouters');
 const ordersRouters = require('./routers/ordersRouters');
+const addressesRouters = require('./routers/adressRouters');
 const photosRouters = require('./routers/photosRouters');
 
 app.use('/products', productsRouter)
 app.use("/categories", categoriesRouters);
 app.use("/clients", clientsRouters);
 app.use("/orders", ordersRouters);
+app.use("/addresses", addressesRouters);
 app.use("/photos", photosRouters);
 
 

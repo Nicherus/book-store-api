@@ -22,7 +22,11 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const orders = await ordersController.getAllOrders();
-        return res.status(200).send(orders);
+        return res
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', orders.length)
+        .send(orders)
+        .status(200);
     } catch (err) {
         return res.sendStatus(500);
     }
