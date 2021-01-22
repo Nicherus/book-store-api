@@ -7,7 +7,6 @@ async function categoryMiddleware(req, res, next) {
     const toValidate = {name: req.body.name}
     const validation = categoriesSchemas.postCategory.validate(toValidate);
     if(validation.error) return res.status(422).send({error: validation.error.details[0].message});
-    console.log(`zap`)
     try {
         await validateExistsCategoryName(req.body.name);
         next();

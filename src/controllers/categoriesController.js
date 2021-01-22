@@ -2,6 +2,7 @@ const InexistingIdError = require("../errors/InexistingIdError");
 const ForbiddenError = require("../errors/ForbiddenError");
 const Category = require("../models/Category");
 const CategoryProduct = require("../models/CategoryProduct");
+const Product = require("../models/Product");
 
 async function postCategory(name) {
     const category = await Category.create({name});
@@ -9,7 +10,17 @@ async function postCategory(name) {
 }
 
 async function getCategories() {
-    const categories = await Category.findAll();
+    const categories = await Category.findAll({
+        include: [
+        {
+            model: Product,
+            attributes: ['id'],
+            through: {
+                attributes: []
+            },
+        },
+        ],
+    });
     return categories;
 }
 
@@ -31,6 +42,8 @@ async function updateCategory(id, name) {
     await category.save();
     return category;
 }
+
+
 
 async function validateExistsCategoryName(name) {
     const existsOtherCategoryWithThisName = await Category.findOne({ where: {name} });

@@ -39,7 +39,11 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const clients = await clientsController.getAllClients();
-        res.status(200).send(clients);
+        res.status(200)
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', clients.length)
+        .send(clients)
+        .status(200);
     } catch (err) {
         return res.sendStatus(500);
     }

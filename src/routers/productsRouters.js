@@ -25,7 +25,11 @@ router.get('/category/:categoryId', async (req,res) => {
 
     try {
         const products = await productsController.getAllProductsByCategory(req.params.categoryId);
-        res.status(200).send(products);
+        res
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', products.length)
+        .send(products)
+        .status(200);
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
@@ -64,7 +68,11 @@ router.get('/', async (req,res) => {
 
     try {
         const products = await productsController.getAllProducts(req.params.id);
-        res.status(200).send(products);
+        res
+        .header('Access-Control-Expose-Headers', 'X-Total-Count')
+        .set('X-Total-Count', products.length)
+        .send(products)
+        .status(200);
     } catch (err) {
         console.log(err);
         res.sendStatus(500);

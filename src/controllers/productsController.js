@@ -22,7 +22,20 @@ async function postProduct(productData) {
 }
 
 async function getAllProducts() {
-    const products = await Product.findAll();
+
+    const products = await Product.findAll({
+        include: [
+        {
+            model: Photo,
+            attributes: ['id', 'link']
+        },
+        {
+            model: Category,
+            attributes: ['id'],
+        }
+        ],
+    });
+    
     return products;
 }
 
@@ -148,10 +161,6 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
     });
     await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 5c283448aed63d048e53a318df4c0d3d182c8a0c
 
 module.exports = {
     postProduct,
