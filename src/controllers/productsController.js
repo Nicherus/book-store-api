@@ -122,6 +122,44 @@ async function getProductById(id) {
     return product;
 }
 
+async function getProductForAdminById(id) {
+
+    const product =  await Product.findOne({
+        where: { id },
+        include: [
+            {
+                model: Photo,
+                attributes: ['id']
+            },
+            {
+                model: Category,
+                attributes: ['id'],
+                through: {
+                    attributes: [],
+                }
+            }
+        ]
+    });
+    if (!product) {
+        throw new InexistingIdError();
+    }
+    const arrayIdPhotos = product.photos.map(photo => photo.id);
+    const arrayIdCtegories = product.categories.map(c => c.id);
+    const productFormated = {
+        "id": product.id,
+        "name": product.name,
+        "price": product.price,
+        "author": product.author,
+        "year": product.year,
+        "synopsis": product.synopsis,
+        "pages": product.pages,
+        "amountStock": product.amountStock,
+        "photos": arrayIdPhotos, 
+        "categories": arrayIdCtegories 
+    };
+    return productFormated;
+}
+
 async function deleteProduct(id) {
 
     await _checkIfProductIdExists(id);
@@ -201,5 +239,6 @@ module.exports = {
     updateProduct,
     getTopSellingProducts,
     decrementProductStock,
-    _checkIfProductIdExists
+    _checkIfProductIdExists,
+    getProductForAdminById,
 }
