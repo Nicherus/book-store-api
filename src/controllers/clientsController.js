@@ -1,4 +1,5 @@
 const Client = require("../models/Client");
+const Address = require("../models/Address");
 const ForbiddenError = require("../errors/ForbiddenError");
 const InexistingIdError = require("../errors/InexistingIdError");
 

@@ -5,7 +5,19 @@ async function postAddress(addressData) {
     return  address;
 }
 
+async function getAddresses() {
+    const address = await Address.findAll();
+    return  address;
+}
+
+async function getAddressById(id) {
+    const address = await Address.findOne({ where: {id} });
+    return  address;
+}
+
 
 module.exports = { 
-    postAddress    
+    postAddress,
+    getAddresses,
+    getAddressById,
 }
