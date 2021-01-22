@@ -1,5 +1,5 @@
-const { func } = require("joi");
 const Photo = require("../models/Photo");
+const InexistingIdError = require('../errors/InexistingIdError')
 
 async function getPhotosByProduct(productId) {
     const photos =  await Photo.findAll( {where: {productId}} );
@@ -14,7 +14,21 @@ async function postPhotos(arrayLinks, productId) {
     await Photo.bulkCreate(arrayInsertPhotos);
 }
 
+async function deletePhoto(id) {
+
+    await _checkIfPhotoIdExists(id);
+    await Photo.destroy( { where: { id } } );
+}
+
+async function _checkIfPhotoIdExists(id) {
+
+    const photo = await Photo.findOne( { where: {id} } );
+    if(!photo) throw new InexistingIdError();
+    return photo;
+}
+
 module.exports = {
     getPhotosByProduct,
     postPhotos,
+    deletePhoto
 }
