@@ -47,6 +47,20 @@ router.get('/top-selling', async (req,res) => {
     }   
 })
 
+router.get('/admin/:id', async (req,res) => {
+
+    try {
+        const product = await productsController.getProductForAdminById(req.params.id);
+        res.status(200).send(product);
+    } catch (err) {
+        if(err instanceof InexistingIdError) {
+            return res.status(400).send({error: "This Id does not belong to any product"});
+        }
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
 router.get('/:id', async (req,res) => {
 
     try {
