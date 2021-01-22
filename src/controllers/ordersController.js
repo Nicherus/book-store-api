@@ -10,7 +10,7 @@ async function postOrder(orderData) {
     const order = await Order.create({clientId, totalPrice});
 
     const productOrdersPromisses = productData.map(async p => {
-        await productsController._checkIfProductIdExists(p.productId);
+        await productsController.checkIfProductIdExists(p.productId);
         return {orderId: order.id, productId: p.productId, amount: p.amount};
     });
 

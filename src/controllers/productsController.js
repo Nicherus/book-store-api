@@ -162,7 +162,7 @@ async function getProductForAdminById(id) {
 
 async function deleteProduct(id) {
 
-    await _checkIfProductIdExists(id);
+    await checkIfProductIdExists(id);
 
     await Photo.destroy( { where: { productId:id} } );
     await CategoryProduct.destroy( { where: { productId:id} } );
@@ -172,7 +172,7 @@ async function deleteProduct(id) {
 
 async function updateProduct(productData, id) {
 
-    const product =  await _checkIfProductIdExists(id);
+    const product =  await checkIfProductIdExists(id);
 
     if (productData.categories) {
         await _checkIfExistsAllCategories(productData.categories);
@@ -207,7 +207,7 @@ async function _checkIfExistsAllCategories(categories) {
         }
 }
 
-async function _checkIfProductIdExists(id) {
+async function checkIfProductIdExists(id) {
 
     const product = await Product.findOne( { where: {id} } );
     if(!product) throw new InexistingIdError();
@@ -222,13 +222,15 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
 }
 
 async function decrementProductStock(productId, decrement) {
-    const product =  await _checkIfProductIdExists(productId);
+    const product =  await checkIfProductIdExists(productId);
 
     product.amountStock = product.amountStock - decrement;
+    if (product.amountStock < 0) {
+        product.amountStock = 0;
+    }
     await product.save();
     return product;
 }
-
 
 module.exports = {
     postProduct,
@@ -239,6 +241,6 @@ module.exports = {
     updateProduct,
     getTopSellingProducts,
     decrementProductStock,
-    _checkIfProductIdExists,
+    checkIfProductIdExists,
     getProductForAdminById,
 }
