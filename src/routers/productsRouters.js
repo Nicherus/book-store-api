@@ -36,6 +36,17 @@ router.get('/category/:categoryId', async (req,res) => {
     }   
 })
 
+router.get('/top-selling', async (req,res) => {
+
+    try {
+        const products = await productsController.getTopSellingProducts();
+        res.status(200).send(products);
+    } catch (err) {
+        console.log(err);
+        res.sendStatus(500);
+    }   
+})
+
 router.get('/:id', async (req,res) => {
 
     try {
@@ -67,28 +78,23 @@ router.delete('/:id', async (req,res) => {
 router.get('/', async (req,res) => {
 
     try {
+<<<<<<< HEAD
         const products = await productsController.getAllProducts(req.params.id);
         res
         .header('Access-Control-Expose-Headers', 'X-Total-Count')
         .set('X-Total-Count', products.length)
         .send(products)
         .status(200);
-    } catch (err) {
-        console.log(err);
-        res.sendStatus(500);
-    }   
-})
-
-router.get('/top-selling', async (req,res) => {
-
-    try {
-        const products = await productsController.getTopSellingProducts();
+=======
+        const products = await productsController.getAllProducts();
         res.status(200).send(products);
+>>>>>>> b2ebac69bf692f757da84fca11111f07917b45d5
     } catch (err) {
         console.log(err);
         res.sendStatus(500);
     }   
 })
+
 
 router.put('/:id', async (req,res) => {
     

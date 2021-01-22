@@ -12,10 +12,12 @@ app.use(express.json());
 const productsRouter = require('./routers/productsRouters');
 const categoriesRouters = require('./routers/categoriesRouters');
 const clientsRouters = require('./routers/clientsRouters');
+const ordersRouters = require('./routers/ordersRouters');
 
 app.use('/products', productsRouter)
 app.use("/categories", categoriesRouters);
 app.use("/clients", clientsRouters);
+app.use("/orders", ordersRouters);
 
 
 module.exports = app;

@@ -1,5 +1,6 @@
 const { Sequelize } = require("sequelize");
 const sequelize = require("../utils/database");
+const ProductOrder = require("./ProductOrder");
 
 class Order extends Sequelize.Model {}
 
@@ -22,5 +23,7 @@ Order.init(
     },
     { sequelize, modelName: "order" }
 );
+
+Order.hasMany(ProductOrder);
 
 module.exports = Order;
