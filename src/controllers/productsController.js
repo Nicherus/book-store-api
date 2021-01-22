@@ -188,7 +188,7 @@ async function decrementProductStock(productId, decrement) {
     const product =  await _checkIfProductIdExists(productId);
 
     product.amountStock = product.amountStock - decrement;
-    const updatedProduct = await product.save();
+    await product.save();
     return product;
 }
 
