@@ -2,6 +2,7 @@ const Order = require("../models/Order");
 const ProductOrder = require("../models/ProductOrder");
 const productsController = require ("../controllers/productsController");
 const clientsController = require ("../controllers/clientsController");
+const InexistingIdError = require("../errors/InexistingIdError");
 
 async function postOrder(orderData) {
     const { clientId, productData, totalPrice } = orderData;
@@ -26,11 +27,26 @@ async function getAllOrders() {
             attributes: ['productId', 'amount'] 
         }
     });
-    
+
     return orders;
+}
+
+async function getOrderById(id) {
+    const order = await Order.findOne({
+        where: { id },
+        include: {
+            model: ProductOrder,
+            attributes: ['productId', 'amount'] 
+        }
+    });
+
+    if(!order) throw new InexistingIdError();
+
+    return order;
 }
 
 module.exports = { 
     postOrder,
-    getAllOrders 
+    getAllOrders,
+    getOrderById 
 }

@@ -28,4 +28,19 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/:id", async (req, res) => {
+    const { id } = req.params;
+    if(!id) return res.sendStatus(400);
+
+    try {
+        const order = await ordersController.getOrderById(id);
+        return res.status(200).send(order);
+    } catch (err) {
+        if(err instanceof InexistingIdError) {
+            return res.status(400).send({error: "This Id does not belong to any order"});
+        }
+        return res.sendStatus(500);
+    }
+});
+
 module.exports = router;
