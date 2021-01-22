@@ -28,7 +28,6 @@ async function getAllProducts() {
 
 async function getTopSellingProducts() {
     const products = await Product.findAll({
-        limit: 4,
         include: [
             {
                 model: Photo,
@@ -43,14 +42,15 @@ async function getTopSellingProducts() {
             },
             {
                 model: ProductOrder,
-                attributes: ['amount']
+                attributes: []
             }
         ],
         order: [  
-            [ { model: CategoryProduct}, 'id', 'DESC'],
+            [ { model: ProductOrder}, 'id', 'DESC'],
         ]
     });
-    return products;
+
+    return products.filter( (p,i) => i < 4);
 }
 
 async function getAllProductsByCategory(categoryId) {
