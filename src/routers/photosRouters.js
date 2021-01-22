@@ -3,6 +3,16 @@ const router = require('express').Router();
 const photosController = require('../controllers/photosController');
 const InexistingIdError = require('../errors/InexistingIdError')
 
+router.get("/", async (req, res) => {
+    try {
+        const photos = await photosController.getAllPhotos();
+        res.status(200).send(photos);
+    } catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+});
+
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
     if(!id) return res.sendStatus(400);

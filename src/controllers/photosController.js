@@ -1,6 +1,11 @@
 const Photo = require("../models/Photo");
 const InexistingIdError = require('../errors/InexistingIdError')
 
+async function getAllPhotos() {
+    const photos = await Photo.findAll();
+    return photos;
+}
+
 async function getPhotosByProduct(productId) {
     const photos =  await Photo.findAll( {where: {productId}} );
     return photos;
@@ -30,5 +35,6 @@ async function _checkIfPhotoIdExists(id) {
 module.exports = {
     getPhotosByProduct,
     postPhotos,
-    deletePhoto
+    deletePhoto,
+    getAllPhotos
 }
