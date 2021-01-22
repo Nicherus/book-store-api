@@ -33,7 +33,6 @@ async function deleteCategory(id) {
     await CategoryProduct.destroy({ where: {categoryId: id}});
     const categoryToDestroy = await Category.findByPk(id);
     await categoryToDestroy.destroy();
-
 }
 
 async function updateCategory(id, name) {
@@ -42,8 +41,6 @@ async function updateCategory(id, name) {
     await category.save();
     return category;
 }
-
-
 
 async function validateExistsCategoryName(name) {
     const existsOtherCategoryWithThisName = await Category.findOne({ where: {name} });

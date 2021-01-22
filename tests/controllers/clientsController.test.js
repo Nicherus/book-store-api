@@ -57,8 +57,8 @@ describe('getClientById', () => {
         const expected = InexistingIdError;
 		Client.findByPk.mockResolvedValue(null);
 
-		const fn = async (id) => {
-            await clientsController.getClientById(id)
+		const fn = async () => {
+            await clientsController.getClientById()
         }
         expect(fn).rejects.toThrow(expected)
     });
