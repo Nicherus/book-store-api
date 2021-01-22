@@ -17,6 +17,11 @@ async function postOrder(orderData) {
     const productOrders = await Promise.all(productOrdersPromisses);
     const productOrderList = await ProductOrder.bulkCreate(productOrders);
 
+    const decrementPromisses = productData.map(async p => {
+        await productsController.decrementProductStock(p.productId, p.amount);
+    });
+    const updatedProducts = await Promise.all(decrementPromisses);
+
     return order;
 }
 
