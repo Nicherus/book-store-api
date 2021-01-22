@@ -49,5 +49,6 @@ Product.init(
 
 Product.hasMany( Photo ); 
 Product.hasMany( ProductOrder ); 
+Product.hasMany( CategoryProduct ); 
 
 module.exports = Product;

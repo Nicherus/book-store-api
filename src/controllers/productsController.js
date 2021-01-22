@@ -27,7 +27,29 @@ async function getAllProducts() {
 }
 
 async function getTopSellingProducts() {
-    const products = await Product.findAll();
+    const products = await Product.findAll({
+        limit: 4,
+        include: [
+            {
+                model: Photo,
+                attributes: ['id', 'link']
+            },
+            {
+                model: Category,
+                attributes: ['id', 'name'],
+                through: {
+                    attributes: [],
+                }
+            },
+            {
+                model: ProductOrder,
+                attributes: ['amount']
+            }
+        ],
+        order: [  
+            [ { model: CategoryProduct}, 'id', 'DESC'],
+        ]
+    });
     return products;
 }
 
@@ -41,7 +63,7 @@ async function getAllProductsByCategory(categoryId) {
             where: {id: categoryId},
             include: {
                         model: Product,
-                        attributes: ['name', 'author', 'synopsis', 'amountStock', 'pages', 'year', 'price'],
+                        attributes: ['id','name', 'author', 'synopsis', 'amountStock', 'pages', 'year', 'price'],
                         through: {
                             attributes: []
                         },
@@ -149,6 +171,14 @@ async function _addCategoriesProductsInMiddleTable(categoriesIds, productId) {
     await CategoryProduct.bulkCreate( arrayInsertMiddleTableCategory );
 }
 
+async function decrementProductStock(productId, decrement) {
+    const product =  await _checkIfProductIdExists(productId);
+
+    product.amountStock = product.amountStock - decrement;
+    const updatedProduct = await product.save();
+    return product;
+}
+
 
 module.exports = {
     postProduct,
@@ -157,5 +187,6 @@ module.exports = {
     getProductById,
     deleteProduct,
     updateProduct,
-    getTopSellingProducts
+    getTopSellingProducts,
+    decrementProductStock
 }
