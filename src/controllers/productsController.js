@@ -188,5 +188,6 @@ module.exports = {
     deleteProduct,
     updateProduct,
     getTopSellingProducts,
-    decrementProductStock
+    decrementProductStock,
+    _checkIfProductIdExists
 }
