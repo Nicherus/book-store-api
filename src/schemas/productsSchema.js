@@ -4,7 +4,7 @@ const postProductSchema = joi.object({
     name: joi.string().required(),
     author: joi.string().required(),
     synopsis: joi.string().required(),
-    amountStock: joi.number().integer().required(),
+    amountStock: joi.number().integer(),
     pages: joi.number().integer().required(),
     year: joi.number().integer().required(),
     price: joi.number().integer().required(),

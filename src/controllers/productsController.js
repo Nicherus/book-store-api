@@ -143,7 +143,6 @@ async function updateProduct(productData, id) {
     }
 
     if (productData.photos) {
-        await Photo.destroy( { where: { "productId": id} } );
         await photosController.postPhotos(productData.photos, id);
     }
 
