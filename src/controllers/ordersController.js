@@ -3,6 +3,7 @@ const ProductOrder = require("../models/ProductOrder");
 const productsController = require ("../controllers/productsController");
 const clientsController = require ("../controllers/clientsController");
 const InexistingIdError = require("../errors/InexistingIdError");
+const Product = require("../models/Product");
 
 async function postOrder(orderData) {
     const { clientId, productData, totalPrice } = orderData;
@@ -10,7 +11,7 @@ async function postOrder(orderData) {
     const order = await Order.create({clientId, totalPrice});
 
     const productOrdersPromisses = productData.map(async p => {
-        await productsController.checkIfProductIdExists(p.productId);
+        await productsController._checkIfProductIdExists(p.productId);
         return {orderId: order.id, productId: p.productId, amount: p.amount};
     });
 
@@ -27,10 +28,18 @@ async function postOrder(orderData) {
 
 async function getAllOrders() {
     const orders = await Order.findAll({
-        include: {
+        include: [{
             model: ProductOrder,
-            attributes: ['productId', 'amount'] 
-        }
+            attributes: ['productId', 'amount'],
+            },
+            {
+                model: Product,
+                attributes: ['name'],
+                through: {
+                    attributes: []
+                },
+            }
+        ]
     });
 
     return orders;
